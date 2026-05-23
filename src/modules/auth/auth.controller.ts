@@ -19,34 +19,29 @@ const regUser = async (req: Request, res: Response) => {
   }
 };
 
- const loginUser = async (req: Request, res: Response) => 
- {
-  const {email, password} = req.body;
+const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
   try {
-    const result = await authService.loginUserIntoDB(email as string, password as string)
-    const {token ,user} = result;
+    const result = await authService.loginUserIntoDB(
+      email as string,
+      password as string,
+    );
+    const { token, user } = result;
     //console.log(accessToken ,user);
-    res.status(200).json(
-      {
-        success: true,
-        message:"Login successfull",
-        data: result
-      }
-    )
-
-    
-  } catch (error:any) {
-    res.status(500).json(
-      {
-        message: error.message,
-        error: error
-      }
-    )
+    res.status(200).json({
+      success: true,
+      message: "Login successfull",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message,
+      error: error,
+    });
   }
-
- }
+};
 
 export const authController = {
   regUser,
-  loginUser
+  loginUser,
 };

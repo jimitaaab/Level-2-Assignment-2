@@ -149,7 +149,7 @@ const updateIssueIntoDB = async (
   if (role === "contributor" && issue.status !== "open") {
     throw new Error("Issue is already in progress");
   }
-  
+
   const result = await pool.query(
     `
       UPDATE issues
@@ -168,9 +168,20 @@ const updateIssueIntoDB = async (
   return result.rows[0];
 };
 
+const deleteIssueFromDB = async (id: string) => {
+  const result = await pool.query(
+    `
+      DELETE FROM issues WHERE id = $1
+  `,
+    [id],
+  );
+  return result;
+};
+
 export const issueService = {
   createIssuesIntoDB,
   getAllIssuesFromDB,
   getSingleIssuefromDB,
   updateIssueIntoDB,
+  deleteIssueFromDB
 };
