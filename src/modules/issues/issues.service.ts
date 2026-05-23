@@ -104,7 +104,7 @@ const getSingleIssuefromDB = async (id: string) => {
   if (reporterDetails.rows.length === 0) {
     throw new Error("Reporter not found");
   }
-  
+
   const user = reporterDetails.rows[0];
 
   const result = {
@@ -120,8 +120,14 @@ const getSingleIssuefromDB = async (id: string) => {
   return result;
 };
 
-export const issueservice = {
+
+const updateIssueToDB = async (id: string) => {
+
+}
+
+export const issueService = {
   createIssuesIntoDB,
   getAllIssuesFromDB,
   getSingleIssuefromDB,
+  updateIssueToDB
 };
