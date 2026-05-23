@@ -20,6 +20,8 @@ app.get("/", (req: Request, res: Response) => {
     author: "Next Mission 2",
   });
 });
+
+
 app.use("/api/auth",authRouter)
 app.use("/api",issuesRoute)
 

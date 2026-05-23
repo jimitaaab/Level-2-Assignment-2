@@ -80,7 +80,6 @@ const getAllIssuesFromDB = async (
 };
 
 const getSingleIssuefromDB = async (id: string) => {
-
   const issue = await pool.query(
     `
         SELECT * FROM issues where id = $1
@@ -120,14 +119,58 @@ const getSingleIssuefromDB = async (id: string) => {
   return result;
 };
 
+const updateIssueIntoDB = async (
+  id: string,
+  userId: number,
+  role: string,
+  payload: ICreateIssue,
+) => {
 
-const updateIssueToDB = async (id: string) => {
+  const { title, description, type } = payload;
 
-}
+  const issueInfo = await pool.query(
+    `
+      SELECT * FROM issues WHERE id = $1
+    `,
+    [id],
+  );
+
+  const issue = issueInfo.rows[0];
+
+  if (!issue) {
+    throw new Error("Issue not found");
+  }
+
+  if (role === "contributor" && userId !== issue.reporter_id) {
+    throw new Error("Unauthorized Access!");
+  }
+
+
+  if (role === "contributor" && issue.status !== "open") {
+    throw new Error("Issue is already in progress");
+  }
+
+  const result = await pool.query(
+    `
+      UPDATE issues
+      SET 
+        title = COALESCE($1, title),
+        description = COALESCE($2, description),
+        type = COALESCE($3, type),
+        status = 'in_progress',
+        updated_at = NOW()
+      WHERE id = $4
+      RETURNING *
+    `,
+    [title, description, type, id],
+  );
+
+  return result.rows[0];
+};
 
 export const issueService = {
   createIssuesIntoDB,
   getAllIssuesFromDB,
   getSingleIssuefromDB,
-  updateIssueToDB
+  updateIssueIntoDB,
 };
