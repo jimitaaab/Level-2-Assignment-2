@@ -5,13 +5,15 @@ import express, {
   type Request,
 } from "express";
 import { issuesRoute } from './modules/issues/issues.route';
-
+import globalError from './middleware/globalErrorHandle';
+import cors from "cors"
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors())
 
 app.get("/", (req: Request, res: Response) => {
 
@@ -26,5 +28,7 @@ app.use("/api/auth",authRouter)
 app.use("/api",issuesRoute)
 
 
+
+app.use(globalError);
 
 export default app;

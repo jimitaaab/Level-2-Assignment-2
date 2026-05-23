@@ -1,43 +1,45 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { authService } from "./auth.service";
+import sendResponse from "../../utility/send.response";
 
-const regUser = async (req: Request, res: Response) => {
+const regUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // console.log("Controller path");
+
     const result = await authService.createUserIntoDB(req.body);
-    // console.log(result)
-    res.status(201).json({
+    if (result.rows.length === 0) {
+      sendResponse(res, {
+        statusCode: 404,
+        success: false,
+        message: "Registration failed",
+        error: Error,
+      });
+    }
+    sendResponse(res, {
+      statusCode: 201,
       success: true,
       message: "User registered successfully",
       data: result.rows[0],
     });
   } catch (error: any) {
-    res.status(500).json({
-      message: error.message,
-      error: error,
-    });
+    next(error);
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   try {
     const result = await authService.loginUserIntoDB(
       email as string,
       password as string,
     );
-    const { token, user } = result;
-    //console.log(accessToken ,user);
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Login successfull",
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      message: error.message,
-      error: error,
-    });
+    next(error);
   }
 };
 

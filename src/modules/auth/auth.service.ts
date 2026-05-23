@@ -45,12 +45,11 @@ const loginUserIntoDB=async (email: string, password: string) => {
     name: user.name,
     email: user.email,
     role: user.role,
-  };
+  } as JwtPayload;
 
   const token = jwt.sign(jwtPayload, config.accessToken_key as string, {
     expiresIn: "1d",
   });
-  console.log("Token: " ,token)
   delete user.password;
 
   return { token, user };
