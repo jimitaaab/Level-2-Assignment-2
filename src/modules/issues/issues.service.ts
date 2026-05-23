@@ -1,4 +1,3 @@
-
 import { pool } from "../../db";
 import type { ICreateIssue, IUserInfo } from "./issues.interface";
 
@@ -63,9 +62,7 @@ const getAllIssuesFromDB = async (
     [reporterIds],
   );
 
-  const reporterMap = new Map(
-    usersResult.rows.map((user) => [user.id, user])
-  );
+  const reporterMap = new Map(usersResult.rows.map((user) => [user.id, user]));
   const result = issues.map((issue) => ({
     id: issue.id,
     title: issue.title,
@@ -82,7 +79,49 @@ const getAllIssuesFromDB = async (
   return result;
 };
 
+const getSingleIssuefromDB = async (id: string) => {
+
+  const issue = await pool.query(
+    `
+        SELECT * FROM issues where id = $1
+    `,
+    [id],
+  );
+
+  if (issue.rows.length === 0) {
+    throw new Error("Issue not found");
+  }
+
+  const reporterId = issue.rows[0].reporter_id;
+
+  const reporterDetails = await pool.query(
+    `
+    SELECT id, name, role FROM users WHERE id = $1
+    `,
+    [reporterId],
+  );
+
+  if (reporterDetails.rows.length === 0) {
+    throw new Error("Reporter not found");
+  }
+  
+  const user = reporterDetails.rows[0];
+
+  const result = {
+    id: issue.rows[0].id,
+    title: issue.rows[0].title,
+    description: issue.rows[0].description,
+    type: issue.rows[0].type,
+    status: issue.rows[0].status,
+    reporter: user,
+    created_at: issue.rows[0].created_at,
+    updated_at: issue.rows[0].updated_at,
+  };
+  return result;
+};
+
 export const issueservice = {
   createIssuesIntoDB,
-  getAllIssuesFromDB
+  getAllIssuesFromDB,
+  getSingleIssuefromDB,
 };

@@ -22,10 +22,8 @@ const createIssues = async (req: Request, res: Response) => {
   }
 };
 
-
 const getAllIssues = async (req: Request, res: Response) => {
- 
-    const { sort, type, status } = req.query;
+  const { sort, type, status } = req.query;
   try {
     const result = await issueservice.getAllIssuesFromDB(
       sort as string,
@@ -46,7 +44,25 @@ const getAllIssues = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleissue = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await issueservice.getSingleIssuefromDB(id as string);
+
+    res.status(200).json({
+      success: true,
+      message: "User found successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message,
+      error: error,
+    });
+  }
+};
 export const issuesController = {
   createIssues,
-  getAllIssues
+  getAllIssues,
+  getSingleissue,
 };
