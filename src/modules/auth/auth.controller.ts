@@ -6,7 +6,7 @@ const regUser = async (req: Request, res: Response) => {
     // console.log("Controller path");
     const result = await authService.createUserIntoDB(req.body);
     // console.log(result)
-    res.status(202).json({
+    res.status(201).json({
       success: true,
       message: "User registered successfully",
       data: result.rows[0],
@@ -19,6 +19,34 @@ const regUser = async (req: Request, res: Response) => {
   }
 };
 
+ const loginUser = async (req: Request, res: Response) => 
+ {
+  const {email, password} = req.body;
+  try {
+    const result = await authService.loginUserIntoDB(email as string, password as string)
+    const {token ,user} = result;
+    //console.log(accessToken ,user);
+    res.status(200).json(
+      {
+        success: true,
+        message:"Login successfull",
+        data: result
+      }
+    )
+
+    
+  } catch (error:any) {
+    res.status(500).json(
+      {
+        message: error.message,
+        error: error
+      }
+    )
+  }
+
+ }
+
 export const authController = {
   regUser,
+  loginUser
 };
