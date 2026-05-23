@@ -149,7 +149,7 @@ const updateIssueIntoDB = async (
   if (role === "contributor" && issue.status !== "open") {
     throw new Error("Issue is already in progress");
   }
-
+  
   const result = await pool.query(
     `
       UPDATE issues
