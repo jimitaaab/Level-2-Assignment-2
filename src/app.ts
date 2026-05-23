@@ -4,6 +4,7 @@ import express, {
   type Response,
   type Request,
 } from "express";
+import { issuesRoute } from './modules/issues/issues.route';
 
 
 const app: Application = express();
@@ -20,7 +21,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 app.use("/api/auth",authRouter)
-
+app.use("/api",issuesRoute)
 
 
 
