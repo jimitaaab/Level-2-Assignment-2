@@ -62,7 +62,7 @@ DevPulse is a RESTful API service designed to manage issues, featuring user auth
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/jimitaaab/Level-2-Assignment-2>
    cd DevPulse
    ```
 
