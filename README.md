@@ -227,14 +227,4 @@ CREATE TABLE issues(
 - **Contributor**: Can create and update their own issues
 - **Maintainer**: Can create, update, and delete any issue
 
-## 📝 License
 
-ISC
-
-## 👤 Author
-
-Next Mission 2
-
----
-
-**For more information or support, please contact the development team.**
